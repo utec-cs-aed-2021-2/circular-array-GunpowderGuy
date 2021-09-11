@@ -1,11 +1,15 @@
 #include <iostream>
+
+#include <cmath>
+
 using namespace std;
 
 template <class T> class CircularArray {
   T *array;
   int capacity;
-  int back;
-  int front;
+  int back = 0;
+  int front = 0;
+  int elementos() { return front - back; }; // tambien conocido como n
 
   int next(int);
   int prev(int);
@@ -16,16 +20,46 @@ public:
   virtual ~CircularArray();
   string to_string(string sep = " ");
 
-  void push_front(T data);
-  void push_back(T data);
+  void push_front(T data) {
+    this->front = (this->front + this->elementos() - 1) % this->elementos();
+    this[front] = data;
+  }
+
+  void push_back(T data) {
+    this->back = (this->back + 1) % this->elementos();
+    this[front] = data;
+  }
+
   void insert(T data, int pos);
-  T pop_front();
-  T pop_back();
-  bool is_full();
-  bool is_empty();
-  int size();
-  void clear();
-  T &operator[](int);
+
+  T pop_front() {
+
+    this->front = (this->front + 1) % this->elementos();
+
+    return T();
+    
+  }
+
+  T pop_back() {
+    this->back = (this->back + this->elementos() - 1) % this->elementos();
+    return T();
+  }
+
+  bool is_full() { return abs(this->back - this->front) == 1; }
+
+  bool is_empty() { return this->back == this->front; }
+
+  int size() { return this->elementos(); }
+
+  void clear(); // buscar que hace
+
+  T &operator[](int i) {
+    const auto n = this->elementos();
+    const auto index = front + i;
+
+    return array[index % n];
+  }
+
   void sort();
   bool is_sorted();
   void reverse();
