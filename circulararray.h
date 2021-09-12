@@ -9,7 +9,6 @@ template <class T> class CircularArray {
   int capacity;
   int back = 0;
   int front = 0;
-  int elementos() { return front - back; }; // tambien conocido como n
 
   int next(int);
   int prev(int);
@@ -21,27 +20,24 @@ public:
   string to_string(string sep = " ");
 
   void push_front(T data) {
-    this->front = (this->front + this->elementos() - 1) % this->elementos();
+    this->front = (this->front + this->size() - 1) % this->size();
     this[front] = data;
   }
 
   void push_back(T data) {
-    this->back = (this->back + 1) % this->elementos();
+    this->back = (this->back + 1) % this->size();
     this[front] = data;
   }
 
   void insert(T data, int pos);
 
   T pop_front() {
-
-    this->front = (this->front + 1) % this->elementos();
-
+    this->front = (this->front + 1) % this->size();
     return T();
-    
   }
 
   T pop_back() {
-    this->back = (this->back + this->elementos() - 1) % this->elementos();
+    this->back = (this->back + this->size() - 1) % this->size();
     return T();
   }
 
@@ -49,20 +45,20 @@ public:
 
   bool is_empty() { return this->back == this->front; }
 
-  int size() { return this->elementos(); }
+  int size() { return front - back; }; // tambien conocido como n
 
   void clear(); // buscar que hace
 
   T &operator[](int i) {
-    const auto n = this->elementos();
+    const auto n = this->size();
     const auto index = front + i;
 
     return array[index % n];
   }
 
-  void sort();
-  bool is_sorted();
-  void reverse();
+  void sort() {}
+  bool is_sorted() { return false; }
+  void reverse() {}
 };
 
 template <class T> CircularArray<T>::CircularArray() { CircularArray(0); }
