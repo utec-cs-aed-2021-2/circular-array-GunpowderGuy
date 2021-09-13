@@ -25,8 +25,10 @@ public:
   }
 
   void push_back(T data) {
-    this->back = (this->back + 1) % this->size();
-    this[front] = data;
+    this[back] = data;
+    // dividir y modulo de zero son no definidos
+    this->back = this->size() ? ((this->back + 1) % this->size()) + front
+                              : (this->back + 1) + front;
   }
 
   void insert(T data, int pos);
@@ -43,9 +45,12 @@ public:
 
   bool is_full() { return abs(this->back - this->front) == 1; }
 
-  bool is_empty() { return this->back == this->front; }
+  bool is_empty() {
+    // return this->back == this->front;
+    return true;
+  }
 
-  int size() { return front - back; }; // tambien conocido como n
+  int size() { return abs(front - back); } // tambien conocido como n
 
   void clear(); // buscar que hace
 
@@ -66,7 +71,8 @@ template <class T> CircularArray<T>::CircularArray() { CircularArray(0); }
 template <class T> CircularArray<T>::CircularArray(int _capacity) {
   this->array = new T[_capacity];
   this->capacity = _capacity;
-  this->front = this->back = -1;
+  this->front = this->capacity / 3;
+  this->back = this->capacity / 2;
 }
 
 template <class T> CircularArray<T>::~CircularArray() { delete[] array; }
@@ -81,7 +87,8 @@ template <class T> int CircularArray<T>::next(int index) {
 
 template <class T> string CircularArray<T>::to_string(string sep) {
   string result = "";
-  for (int i = 0; i < size(); i++)
+  for (int i = 0; i < size(); i++) {
     result += std::to_string((*this)[i]) + sep;
+  }
   return result;
 }
