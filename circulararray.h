@@ -20,15 +20,16 @@ public:
   string to_string(string sep = " ");
 
   void push_front(T data) {
-    this->front = (this->front + this->size() - 1) % this->size();
     this[front] = data;
+    this->front = this->size() ? (this->front + this->size() - 1) % this->size()
+                               : this->front + this->size() - 1;
   }
 
   void push_back(T data) {
     this[back] = data;
     // dividir y modulo de zero son no definidos
     this->back = this->size() ? ((this->back + 1) % this->size()) + front
-                              : (this->back + 1) + front;
+                              : this->back + 1 + front;
   }
 
   void insert(T data, int pos);
@@ -43,11 +44,14 @@ public:
     return T();
   }
 
-  bool is_full() { return abs(this->back - this->front) == 1; }
+  bool is_full() {
+    // return abs(this->back - this->front) == 1;
+    return this->size() == this->capacity;
+  }
 
   bool is_empty() {
     // return this->back == this->front;
-    return true;
+    return this->size() == 0;
   }
 
   int size() { return abs(front - back); } // tambien conocido como n
