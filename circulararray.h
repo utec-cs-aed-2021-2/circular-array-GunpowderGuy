@@ -54,14 +54,21 @@ public:
     return this->size() == 0;
   }
 
-  int size() { return abs(front - back); } // tambien conocido como n
+  int size() {
+    if (this->back < this->front) {
+      return capacity - (this->front - this->back) + 1;
+    } else {
+      return this->back - this->front + 1;
+    }// revisar caso que front y back sean iguales
+  } // tambien conocido como n
 
   void clear(); // buscar que hace
 
   T &operator[](int i) {
-    const auto n = this->size();
-    const auto index = front + i;
+    const auto n = this->capacity;
+    const auto index = this->front + i;
 
+    // no deberia usarse si la capacidad es 0
     return array[index % n];
   }
 
