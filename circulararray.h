@@ -20,28 +20,34 @@ public:
   string to_string(string sep = " ");
 
   void push_front(T data) {
+    this->front = this->capacity
+                      ? (this->front + this->capacity - 1) % this->capacity
+                      : this->front + this->capacity - 1;
     this[front] = data;
-    this->front = this->size() ? (this->front + this->size() - 1) % this->size()
-                               : this->front + this->size() - 1;
   }
 
   void push_back(T data) {
     this[back] = data;
     // dividir y modulo de zero son no definidos
-    this->back = this->size() ? ((this->back + 1) % this->size()) + front
-                              : this->back + 1 + front;
+    this->back = this->capacity ? ((this->back + 1) % this->capacity) + front
+                                : this->back + 1 + front;
   }
 
   void insert(T data, int pos);
 
   T pop_front() {
-    this->front = (this->front + 1) % this->size();
-    return T();
+    const auto index = front;
+    this->front = (this->front + this->capacity - 1) % this->capacity;
+    // la capacidad no puede ser 0
+
+    return (*this)[index];
   }
 
   T pop_back() {
-    this->back = (this->back + this->size() - 1) % this->size();
-    return T();
+    const auto index = back;
+    this->back = (this->back + this->capacity - 1) % this->capacity;
+    // la capacidad no puede ser 0
+    return (*this)[index];
   }
 
   bool is_full() {
@@ -59,8 +65,8 @@ public:
       return capacity - (this->front - this->back) + 1;
     } else {
       return this->back - this->front + 1;
-    }// revisar caso que front y back sean iguales
-  } // tambien conocido como n
+    } // revisar caso que front y back sean iguales
+  }   // tambien conocido como n
 
   void clear(); // buscar que hace
 
